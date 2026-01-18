@@ -1,0 +1,8 @@
+/Manifest*.toml
+/docs/Manifest*.toml
+/docs/build/
+
+
+*.jl.cov
+*.jl.*.cov
+lcov.info

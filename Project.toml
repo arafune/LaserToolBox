@@ -1,0 +1,19 @@
+name = "LaserToolBox"
+uuid = "1a382c75-2b04-4832-93aa-ff0958754132"
+version = "0.0.1"
+authors = ["Ryuichi ARafune"]
+
+[deps]
+Coverage = "a2441757-f6aa-5fb2-8edb-039e3f45d037"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+
+[compat]
+Coverage = "1"
+ForwardDiff = "1"
+julia = "1.12"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
