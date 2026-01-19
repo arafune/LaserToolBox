@@ -37,11 +37,11 @@ Calculate the refractive index using the Sellmeier equation.
 """
 function sellmeier(
     λ::T,
-    A::T,
-    B::NTuple{3,T},
-    C::NTuple{3,T};
+    A::TCoeff,
+    B::NTuple{3,TCoeff},
+    C::NTuple{3,TCoeff};
     derivative::Int = 0,
-) where {T<:AbstractFloat}
+) where {T<:Real, TCoeff<:Real}
     if derivative < 0
         throw(ArgumentError("derivative must be ≥ 0"))
     end

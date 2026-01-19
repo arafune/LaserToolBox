@@ -12,6 +12,8 @@ using Test
                 #
                 include("dispersion/dispersive_optics/test_prism_pair.jl")
                 include("dispersion/dispersive_optics/test_prism_pair_internal.jl")
+                #
+                include("dispersion/test_orders.jl")
             end
         end
     end
