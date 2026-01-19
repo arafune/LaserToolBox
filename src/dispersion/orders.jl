@@ -1,6 +1,5 @@
 using ForwardDiff
 
-using .Materials.RefractiveIndex
 """
     beta_n(refractive_index_model, λ; order::Int = 1, unit::Symbol = :mm)
 

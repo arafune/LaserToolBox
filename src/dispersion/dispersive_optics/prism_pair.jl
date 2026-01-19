@@ -6,7 +6,7 @@ This function is used as the default material property for the PrismPair struct.
 #
 # PrismPair to calculate GDD
 using ..Materials.RefractiveIndex: sf11
-using ..Dispersion: beta_n
+using ...Dispersion: beta_n
 
 """A struct representing a pair of prisms used for dispersion compensation.
 
