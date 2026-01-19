@@ -31,10 +31,10 @@ Calculate the refractive index using the Ciddor-type
 """
 function air_dispersion(
     λ::T,
-    B::NTuple{2,T},
-    C::NTuple{2,T};
+    B::NTuple{2,TCoeff},
+    C::NTuple{2,TCoeff};
     derivative::Int = 0,
-) where {T<:Real}
+) where {T<:Real, TCoeff<:Real}
     if derivative < 0
         throw(ArgumentError("derivative must be ≥ 0"))
     end

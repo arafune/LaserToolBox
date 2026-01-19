@@ -27,6 +27,6 @@ using .Dispersion
 
 export Dispersion
 export PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
-
+export beta_n, gvd, tod
 
 end

@@ -18,5 +18,8 @@ using .DispersiveOptics: PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
 export DispersiveOptics
 export PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
 
-export gvd, tod, beta_n
+export beta_n, gvd, tod
+
+import ..RefractiveIndex
+const n = RefractiveIndex
 end
