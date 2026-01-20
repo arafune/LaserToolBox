@@ -16,7 +16,9 @@ include("dispersion/materials/constants/constants.jl")
 using .MaterialConstants
 
 include("dispersion/materials/numeric/numeric.jl")
+
 import .RefractiveIndex
+
 export RefractiveIndex
 const n = RefractiveIndex
 export n
@@ -28,5 +30,10 @@ using .Dispersion
 export Dispersion
 export PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
 export beta_n, gvd, tod
+
+include("optics/abcd.jl")
+
+export FreeSpace, ThinLens, ThickLens, Interface, PlanoConvexLens
+export transfer_matrix, effective_focal_length, back_focal_length
 
 end
