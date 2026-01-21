@@ -60,47 +60,7 @@ struct ThickLens <: AbstractOpticalElement
     R1::Real
     R2::Real
 end
-# --- (Transfer Matrix) ---
 
-function transfer_matrix(fs::FreeSpace)
-    return [
-        1.0 fs.L;
-        0.0 1.0
-    ]
-end
-
-function transfer_matrix(tl::ThinLens)
-    return [
-        1.0 0.0;
-        -1.0/tl.f 1.0
-    ]
-end
-
-function transfer_matrix(it::Interface)
-    P = (it.n2 - it.n1) / it.R
-    return [
-        1.0 0.0;
-        (it.n2 - it.n1)/(it.n2*it.R) it.n1/it.n2
-    ]
-end
-
-"""
-    transfer_matrix(tl::ThickLens)
-
-Calculate the ABCD transfer matrix for a thick lens.
-- `tl`: ThickLens object
-
-The transfer matrix is computed as the product of:
-1. Interface from environment to lens (radius R1)
-2. Free space propagation through the lens (thickness d)
-3. Interface from lens to environment (radius -R2)
-"""
-function transfer_matrix(tl::ThickLens)
-    m1 = Interface(tl.n_env, tl.n_lens, tl.R1) |> transfer_matrix
-    m2 = Medium(tl.d, ttl.n_lens) |> transfer_matrix
-    m3 = Interface(tl.n_lens, tl.n_env, -tl.R2) |> transfer_matrix
-    return m3 * m2 * m1
-end
 
 """
   ThickLens(n_lens, d, R1, R2; n_env=1.0)
@@ -112,6 +72,11 @@ Convenience constructor for ThickLens.
 - `R2`: Radius of curvature for the second surface
 - `n_env`: (optional) Refractive index of the environment (default: 1.0)
 """
+function ThickLens(n_lens, n_env, d, R1, R2)
+    return ThickLens(n_lens, n_env, d, R1, R2)
+end
+
+
 function ThickLens(n_lens, d, R1, R2; n_env = 1.0)
     return ThickLens(n_lens, n_env, d, R1, R2)
 end
@@ -133,6 +98,55 @@ function PlanoConvexLens(n_lens, d, R; n_env = 1.0)
 end
 
 PlanoConvexLens(; n_lens, n_env = 1.0, d, R) = PlanoConvexLens(n_lens, d, R; n_env = n_env)
+
+# --- (Transfer Matrix) ---
+
+function transfer_matrix(fs::FreeSpace)
+    return [
+        1.0 fs.L;
+        0.0 1.0
+    ]
+end
+
+
+function transfer_matrix(med::Medium)
+    return [
+        1.0 med.L/med.n;
+        0.0 1.0
+    ]
+end
+
+function transfer_matrix(tl::ThinLens)
+    return [
+        1.0 0.0;
+        -1.0/tl.f 1.0
+    ]
+end
+
+function transfer_matrix(it::Interface)
+    return [
+        1.0 0.0;
+        (it.n2 - it.n1)/(it.n2*it.R) it.n1/it.n2
+    ]
+end
+
+"""
+    transfer_matrix(tl::ThickLens)
+
+Calculate the ABCD transfer matrix for a thick lens.
+- `tl`: ThickLens object
+
+The transfer matrix is computed as the product of:
+1. Interface from environment to lens (radius R1)
+2. Free space propagation through the lens (thickness d)
+3. Interface from lens to environment (radius -R2)
+"""
+function transfer_matrix(tl::ThickLens)
+    m1 = Interface(tl.n_env, tl.n_lens, tl.R1) |> transfer_matrix
+    m2 = Medium(tl.d, tl.n_lens) |> transfer_matrix
+    m3 = Interface(tl.n_lens, tl.n_env, tl.R2) |> transfer_matrix
+    return m3 * m2 * m1
+end
 
 """
     effective_focal_length(M)
