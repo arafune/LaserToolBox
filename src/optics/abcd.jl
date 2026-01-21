@@ -10,7 +10,7 @@ abstract type AbstractOpticalElement end
 """
 struct Medium <: AbstractOpticalElement
     L::Real
-    n:Real
+    n::Real
 end
 
 function Medium(L, n)
