@@ -6,11 +6,28 @@ export transfer_matrix, effective_focal_length, back_focal_length
 abstract type AbstractOpticalElement end
 
 """
-    FreeSpace(L)
+    Medium(L, n)
 """
-struct FreeSpace <: AbstractOpticalElement
+struct Medium <: AbstractOpticalElement
     L::Real
+    n:Real
 end
+
+function Medium(L, n)
+    return FreeSpace(L / n)
+end
+
+function Medium(; L, n)
+    return Medium(L, n)
+end
+
+
+"""
+    FreeSpace(L)
+Free space propagation over distance L 
+"""
+FreeSpace(L) = Medium(L, 1.0)
+
 
 """
     ThinLens(f)
@@ -80,7 +97,7 @@ The transfer matrix is computed as the product of:
 """
 function transfer_matrix(tl::ThickLens)
     m1 = Interface(tl.n_env, tl.n_lens, tl.R1) |> transfer_matrix
-    m2 = FreeSpace(tl.d) |> transfer_matrix
+    m2 = Medium(tl.d, ttl.n_lens) |> transfer_matrix
     m3 = Interface(tl.n_lens, tl.n_env, -tl.R2) |> transfer_matrix
     return m3 * m2 * m1
 end

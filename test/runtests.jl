@@ -15,7 +15,7 @@ using Test
                 #
                 include("dispersion/test_orders.jl")
                 #
-                #                include("optics/test_abcd.jl")
+                include("optics/test_abcd.jl")
             end
         end
     end
