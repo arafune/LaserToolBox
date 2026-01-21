@@ -14,7 +14,7 @@ struct Medium <: AbstractOpticalElement
 end
 
 function Medium(L, n)
-    return FreeSpace(L / n)
+    return Medium(L, n)
 end
 
 function Medium(; L, n)
@@ -41,12 +41,17 @@ end
     Interface(n1, n2, R=Inf)
 
 Interface between the medium with Refractive n1 and n2, R is radius of curvature.
+
+
 """
 struct Interface <: AbstractOpticalElement
     n1::Real
     n2::Real
     R::Real
 end
+
+Interface(n1, n2; R = Inf) = Interface(n1, n2, R)
+
 
 """
     ThickLens(n_lens, n_env, d, R1, R2)
@@ -86,7 +91,8 @@ ThickLens(; n_lens, n_env = 1.0, d, R1, R2) = ThickLens(n_lens, n_env, d, R1, R2
 """
     PlanoConvexLens(n_lens, d, R; n_env=1.0)
 
-Convenience constructor for a plano-convex lens (one flat side, one curved side).
+Convenience constructor for a plano-convex lens
+(one flat side, one curved side).  The curved side faces the collimated side.
 
 - `n_lens`: Refractive index of the lens
 - `d`: Thickness of the lens
@@ -94,20 +100,12 @@ Convenience constructor for a plano-convex lens (one flat side, one curved side)
 - `n_env`: (optional) Refractive index of the environment (default: 1.0)
 """
 function PlanoConvexLens(n_lens, d, R; n_env = 1.0)
-    return ThickLens(n_lens, n_env, d, Inf, R)
+    return ThickLens(n_lens, n_env, d, -R, Inf)
 end
 
 PlanoConvexLens(; n_lens, n_env = 1.0, d, R) = PlanoConvexLens(n_lens, d, R; n_env = n_env)
 
 # --- (Transfer Matrix) ---
-
-function transfer_matrix(fs::FreeSpace)
-    return [
-        1.0 fs.L;
-        0.0 1.0
-    ]
-end
-
 
 function transfer_matrix(med::Medium)
     return [
@@ -139,7 +137,7 @@ Calculate the ABCD transfer matrix for a thick lens.
 The transfer matrix is computed as the product of:
 1. Interface from environment to lens (radius R1)
 2. Free space propagation through the lens (thickness d)
-3. Interface from lens to environment (radius -R2)
+3. Interface from lens to environment (radius R2)
 """
 function transfer_matrix(tl::ThickLens)
     m1 = Interface(tl.n_env, tl.n_lens, tl.R1) |> transfer_matrix
