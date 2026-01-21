@@ -23,7 +23,7 @@ end
 """
     Interface(n1, n2, R=Inf)
 
-Interfarce between the medium with Refractive n1 and n2, R is radius of curvature.
+Interface between the medium with Refractive n1 and n2, R is radius of curvature.
 """
 struct Interface <: AbstractOpticalElement
     n1::Real
@@ -99,6 +99,8 @@ function ThickLens(n_lens, d, R1, R2; n_env = 1.0)
     return ThickLens(n_lens, n_env, d, R1, R2)
 end
 
+ThickLens(; n_lens, n_env = 1.0, d, R1, R2) = ThickLens(n_lens, n_env, d, R1, R2)
+
 """
     PlanoConvexLens(n_lens, d, R; n_env=1.0)
 
@@ -112,6 +114,8 @@ Convenience constructor for a plano-convex lens (one flat side, one curved side)
 function PlanoConvexLens(n_lens, d, R; n_env = 1.0)
     return ThickLens(n_lens, n_env, d, Inf, R)
 end
+
+PlanoConvexLens(; n_lens, n_env = 1.0, d, R) = PlanoConvexLens(n_lens, d, R; n_env = n_env)
 
 """
     effective_focal_length(M)
