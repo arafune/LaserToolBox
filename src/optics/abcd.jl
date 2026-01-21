@@ -6,15 +6,15 @@ export transfer_matrix, effective_focal_length, back_focal_length
 abstract type AbstractOpticalElement end
 
 """
-    Medium(L, n)
+    Medium(L, n_medium)
 """
 struct Medium <: AbstractOpticalElement
     L::Real
-    n::Real
+    n_medium::Real
 end
 
-function Medium(; L, n)
-    return Medium(L, n)
+function Medium(; L, n_medium)
+    return Medium(L, n_medium)
 end
 
 
@@ -100,7 +100,7 @@ PlanoConvexLens(; n_lens, n_env = 1.0, d, R) = PlanoConvexLens(n_lens, d, R; n_e
 
 function transfer_matrix(med::Medium)
     return [
-        1.0 med.L/med.n;
+        1.0 med.L/med.n_medium;
         0.0 1.0
     ]
 end
@@ -132,7 +132,7 @@ The transfer matrix is computed as the product of:
 """
 function transfer_matrix(tl::ThickLens)
     m1 = Interface(tl.n_env, tl.n_lens, tl.R1) |> transfer_matrix
-    m2 = Medium(tl.d, tl.n_lens) |> transfer_matrix
+    m2 = Medium(L = tl.d, n_medium = tl.n_lens) |> transfer_matrix
     m3 = Interface(tl.n_lens, tl.n_env, tl.R2) |> transfer_matrix
     return m3 * m2 * m1
 end
