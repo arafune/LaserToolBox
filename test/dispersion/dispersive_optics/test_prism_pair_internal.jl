@@ -1,6 +1,5 @@
 using Test
 using LaserToolBox
-const ri = LaserToolBox.n
 
 const DO = LaserToolBox.Dispersion.DispersiveOptics
 #using LaserToolBox.Dispersion: theta_1, theta_2, lg,
@@ -11,17 +10,17 @@ const TOL = 1e-8
 
 # SF11
 # @ 800nm
-n = ri.sf11(0.8)
-brewster_angle = brewster_angle_deg(n)
-ideal_apex = ideal_apex_deg(n)
+n_sf11 = n.sf11(0.8)
+brewster_angle = brewster_angle_deg(n_sf11)
+ideal_apex = ideal_apex_deg(n_sf11)
 
-@test brewster_angle_deg(ri.sf11, 0.8) ≈ brewster_angle atol=TOL
+@test brewster_angle_deg(n.sf11, 0.8) ≈ brewster_angle atol=TOL
 pr_brewster = PrismPair(
     wavelength = 800.0,
     incident_angle = brewster_angle,
     apex_angle = ideal_apex,
     insertion = (5.0, 10.0),
-    material = ri.sf11,
+    material = n.sf11,
 )
 
 
@@ -29,10 +28,10 @@ pr_brewster = PrismPair(
     prism = pr_brewster
     @test rad2deg.(DO.theta_1(prism)) ≈ rad2deg.(DO.theta_2(prism)) atol=TOL
 
-    @test sin(deg2rad(brewster_angle)) ≈ n / sqrt(1+n^2) atol=TOL
-    @test cos(deg2rad(brewster_angle)) ≈ 1.0 / sqrt(1+n^2) atol=TOL
+    @test sin(deg2rad(brewster_angle)) ≈ n_sf11 / sqrt(1+n_sf11^2) atol=TOL
+    @test cos(deg2rad(brewster_angle)) ≈ 1.0 / sqrt(1+n_sf11^2) atol=TOL
 
-    @test DO.dθ1_dΩ(prism) ≈ -(1.0/n^2) * DO.dn_dΩ(prism) atol=TOL
+    @test DO.dθ1_dΩ(prism) ≈ -(1.0/n_sf11^2) * DO.dn_dΩ(prism) atol=TOL
     @test DO.dθ3_dΩ(prism) ≈ 2DO.dn_dΩ(prism) atol=TOL
     @test DO.dn_dΩ(prism)[1] > 0
 
