@@ -13,10 +13,6 @@ struct Medium <: AbstractOpticalElement
     n::Real
 end
 
-function Medium(L, n)
-    return Medium(L, n)
-end
-
 function Medium(; L, n)
     return Medium(L, n)
 end
@@ -77,11 +73,6 @@ Convenience constructor for ThickLens.
 - `R2`: Radius of curvature for the second surface
 - `n_env`: (optional) Refractive index of the environment (default: 1.0)
 """
-function ThickLens(n_lens, n_env, d, R1, R2)
-    return ThickLens(n_lens, n_env, d, R1, R2)
-end
-
-
 function ThickLens(n_lens, d, R1, R2; n_env = 1.0)
     return ThickLens(n_lens, n_env, d, R1, R2)
 end
