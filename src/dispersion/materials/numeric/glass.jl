@@ -1,8 +1,10 @@
 # dispersion/materials/numeric/glass.jl
 
 using ..MaterialConstants: BK7, BK7_SOURCE
-using ..MaterialConstants: FusedSilica, FUSED_SILICA_SOURCE
 using ..MaterialConstants: CaF2, CaF2_SOURCE
+using ..MaterialConstants: Corning7980, CORNING7980_SOURCE
+using ..MaterialConstants: Corning7979, CORNING7979_SOURCE
+using ..MaterialConstants: FusedSilica, FUSED_SILICA_SOURCE
 using ..MaterialConstants: SF10, SF10_SOURCE
 using ..MaterialConstants: SF11, SF11_SOURCE
 
@@ -42,6 +44,51 @@ function caf2(λ; derivative::Int = 0)
     return sellmeier(λ, CaF2.A, CaF2.B, CaF2.C; derivative = derivative)
 end
 
+"""
+  corning7980(λ; derivative=0)
+
+Dispersion of Corning 7980.
+
+$CORNING7980_SOURCE
+
+$DISPERSION_DOC
+"""
+function corning7980(λ; derivative::Int = 0)
+    if λ < Corning7980.range[1] || λ>Corning7980.range[2]
+        msg = "Wavelength $λ µm is out of the valid range for dispersion model ($(Corning7980.range[1]) - $(Corning7980.range[2]) µm)."
+        throw(ArgumentError(msg))
+    end
+    return sellmeier(
+        λ,
+        Corning7980.A,
+        Corning7980.B,
+        Corning7980.C;
+        derivative = derivative,
+    )
+end
+
+"""
+  corning7979(λ; derivative=0)
+
+Dispersion of Corning 7979.
+
+$CORNING7979_SOURCE
+
+$DISPERSION_DOC
+"""
+function corning7979(λ; derivative::Int = 0)
+    if λ < Corning7979.range[1] || λ>Corning7979.range[2]
+        msg = "Wavelength $λ µm is out of the valid range for dispersion model ($(Corning7979.range[1]) - $(Corning7979.range[2]) µm)."
+        throw(ArgumentError(msg))
+    end
+    return sellmeier(
+        λ,
+        Corning7979.A,
+        Corning7979.B,
+        Corning7979.C;
+        derivative = derivative,
+    )
+end
 """
   fused_silica(λ; derivative=0)
 

@@ -34,15 +34,15 @@ biaxial_material_test_data = [
     )
 ]
 
-# @pytest ではなく @testset を使用し、verbose=true で詳細を表示
+# 
 @testset verbose = true "Biaxial Material Tests" begin
     for data in biaxial_material_test_data
-        # 各材料ごとのテストセット
+        #
         @testset "$(data.label) (Numeric)" begin
             λ = data.λ
             n_calc = data.func(λ)
 
-            # expected[1] が n_e, expected[2] が n_o と仮定
+            # Assumption expected[1] is n_e, expected[2] is n_o
             @test n_calc.n_e ≈ data.expected[1] atol = data.atol
             @test n_calc.n_o ≈ data.expected[2] atol = data.atol
 
@@ -57,7 +57,7 @@ biaxial_material_test_data = [
                 @test d2n_e > 0
                 @test d2n_o > 0
 
-                # エラーメッセージのテスト（完全一致が必要なので注意）
+                # Test Error message
                 @test_throws ArgumentError("derivative must be ≥ 0") data.func(
                     λ;
                     derivative = -1,
@@ -87,3 +87,51 @@ biaxial_material_test_data = [
     end
 end
 
+
+bbo_e_axis_test_data = [
+    (
+        func = n.beta_bbo_e,
+        expected = 1.5462,
+        atol = 1e-3,
+        λ = 0.8,
+        label = "beta BBO 800nm (e)",
+    )
+    (
+        func = n.alpha_bbo_e,
+        expected = 1.5500,
+        atol = 1e-3,
+        λ = 0.4,
+        label = "Alpha BBO 400nm (e)",
+    )
+]
+
+@testset "BBO Refractive Indices  along e-axis (Numeric)" begin
+    for data in bbo_e_axis_test_data
+        @testset "$(data.label) (Numeric)" begin
+            λ = data.λ
+            @test data.func(λ) ≈ data.expected atol = data.atol
+
+            @testset "Derivative Consistency" begin
+                dn = data.func(λ; derivative = 1)
+                @test dn < 0
+
+                d2n = data.func(λ; derivative = 2)
+                @test d2n > 0
+
+                @test_throws ArgumentError("derivative must be ≥ 0") data.func(
+                    λ;
+                    derivative = -1,
+                )
+            end
+
+            λ = 0.01
+            @test_throws ArgumentError data.func(λ)
+
+            @testset "Vectorization" begin
+                λs = [0.4, 0.8, 1.1]
+                @test data.func.(λs) isa Vector{Float64}
+                @test issorted(data.func.(λs), rev = true)
+            end
+        end
+    end
+end

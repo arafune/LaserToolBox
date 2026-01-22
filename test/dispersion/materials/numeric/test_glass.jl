@@ -15,6 +15,20 @@ material_test_data = [
     (func = n.sf10, expected = 1.7112, atol = 1e-4, λ = 0.800, label = "SF10"),
     (func = n.sf11, expected = 1.7646, atol = 1e-4, λ = 0.800, label = "SF11"),
     (func = n.sf11, expected = 1.7847, atol = 1e-4, λ = 0.5876, label = "SF11_dline"),
+    (
+        func = n.corning7980,
+        expected = 1.460076,
+        atol = 1e-4,
+        λ = 0.546227,
+        label = "Corning7980",
+    ),
+    (
+        func = n.corning7979,
+        expected = 1.460135,
+        atol = 1e-4,
+        λ = 0.546227,
+        label = "Corning7979",
+    ),
 ]
 
 @testset "Glass Refractive Indices (Numeric)" begin
@@ -40,7 +54,7 @@ material_test_data = [
             @test_throws ArgumentError data.func(λ)
 
             @testset "Vectorization" begin
-                λs = [0.4, 0.8, 1.2]
+                λs = [0.4, 0.8, 1.1]
                 @test data.func.(λs) isa Vector{Float64}
                 @test issorted(data.func.(λs), rev = true)
             end

@@ -9,13 +9,7 @@ Expression for the Sellmeier equation.
 """
 sellmeier_expr(λ, A, B, C) = begin
     λ2 = λ^2
-    sqrt(
-        one(λ) +
-        A +
-        B[1] * λ2 / (λ2 - C[1]) +
-        B[2] * λ2 / (λ2 - C[2]) +
-        B[3] * λ2 / (λ2 - C[3]),
-    )
+    sqrt(one(λ) + A + sum(B[i] * λ2 / (λ2 - C[i]) for i in eachindex(B, C)))
 end
 
 
@@ -38,10 +32,10 @@ Calculate the refractive index using the Sellmeier equation.
 function sellmeier(
     λ::T,
     A::TCoeff,
-    B::NTuple{3,TCoeff},
-    C::NTuple{3,TCoeff};
+    B::Tuple{Vararg{TCoeff}},
+    C::Tuple{Vararg{TCoeff}};
     derivative::Int = 0,
-) where {T<:Real, TCoeff<:Real}
+) where {T<:Real,TCoeff<:Real}
     if derivative < 0
         throw(ArgumentError("derivative must be ≥ 0"))
     end

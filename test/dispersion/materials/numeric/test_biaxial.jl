@@ -21,15 +21,13 @@ biaxial_material_test_data = [
     )
 ]
 
-# @pytest ではなく @testset を使用し、verbose=true で詳細を表示
 @testset verbose = true "Biaxial Material Tests" begin
     for data in biaxial_material_test_data
-        # 各材料ごとのテストセット
+
         @testset "$(data.label) (Numeric)" begin
             λ = data.λ
             n_calc = data.func(λ)
 
-            # expected[1] が n_e, expected[2] が n_o と仮定
             @test n_calc.n_e ≈ data.expected[1] atol = data.atol
             @test n_calc.n_o ≈ data.expected[2] atol = data.atol
 
@@ -72,3 +70,93 @@ biaxial_material_test_data = [
     end
 end
 
+
+
+biaxial_material_e_axis_test_data = [
+    (func = n.mgf2_e, expected = 1.3896, atol = 1e-3, λ = 0.5876, label = "MgF2")
+    (func = n.calcite_e, expected = 1.480, atol = 1e-3, λ = 1.064, label = "Calcite")
+    (
+        func = n.quartz_e,
+        expected = 1.5472301086112594,
+        atol = 1e-13,
+        λ = 0.8,
+        label = "Quartz",
+    )
+]
+
+
+@testset "BiAxial material Refractive Indices along e-axis (Numeric)" begin
+    for data in biaxial_material_e_axis_test_data
+        @testset "$(data.label) (Numeric)" begin
+            λ = data.λ
+            @test data.func(λ) ≈ data.expected atol = data.atol
+
+            @testset "Derivative Consistency" begin
+                dn = data.func(λ; derivative = 1)
+                @test dn < 0
+
+                d2n = data.func(λ; derivative = 2)
+                @test d2n > 0
+
+                @test_throws ArgumentError("derivative must be ≥ 0") data.func(
+                    λ;
+                    derivative = -1,
+                )
+            end
+
+            λ = 0.01
+            @test_throws ArgumentError data.func(λ)
+
+            @testset "Vectorization" begin
+                λs = [0.4, 0.8, 1.1]
+                @test data.func.(λs) isa Vector{Float64}
+                @test issorted(data.func.(λs), rev = true)
+            end
+        end
+    end
+end
+
+
+biaxial_material_o_axis_test_data = [
+    (func = n.mgf2_o, expected = 1.3777, atol = 1e-3, λ = 0.5876, label = "MgF2")
+    (func = n.calcite_o, expected = 1.642, atol = 1e-3, λ = 1.064, label = "Calcite")
+    (
+        func = n.quartz_o,
+        expected = 1.5383355123424691,
+        atol = 1e-13,
+        λ = 0.8,
+        label = "Quartz",
+    )
+]
+
+
+@testset "BiAxial material Refractive Indices along o-axis (Numeric)" begin
+    for data in biaxial_material_o_axis_test_data
+        @testset "$(data.label) (Numeric)" begin
+            λ = data.λ
+            @test data.func(λ) ≈ data.expected atol = data.atol
+
+            @testset "Derivative Consistency" begin
+                dn = data.func(λ; derivative = 1)
+                @test dn < 0
+
+                d2n = data.func(λ; derivative = 2)
+                @test d2n > 0
+
+                @test_throws ArgumentError("derivative must be ≥ 0") data.func(
+                    λ;
+                    derivative = -1,
+                )
+            end
+
+            λ = 0.01
+            @test_throws ArgumentError data.func(λ)
+
+            @testset "Vectorization" begin
+                λs = [0.4, 0.8, 1.1]
+                @test data.func.(λs) isa Vector{Float64}
+                @test issorted(data.func.(λs), rev = true)
+            end
+        end
+    end
+end

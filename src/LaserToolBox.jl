@@ -33,7 +33,7 @@ export beta_n, gvd, tod
 
 include("optics/abcd.jl")
 
-export FreeSpace, ThinLens, ThickLens, Interface, PlanoConvexLens
+export Medium, FreeSpace, ThinLens, ThickLens, Interface, PlanoConvexLens
 export transfer_matrix, effective_focal_length, back_focal_length
 
 end
