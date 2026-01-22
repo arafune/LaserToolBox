@@ -6,7 +6,7 @@ This function is used as the default material property for the PrismPair struct.
 #
 # PrismPair to calculate GDD
 using ..Materials.RefractiveIndex: sf11
-using ...Dispersion: beta_n
+using ...Dispersion: beta_n, gvd
 
 """A struct representing a pair of prisms used for dispersion compensation.
 
@@ -137,11 +137,8 @@ dθ3_dΩ(prism_pair::PrismPair) = begin
 end
 
 gdd_positive(prism_pair::PrismPair) = begin
-    #c = 0.299792458  # µm/fs
-    #d2n_dλ2 = prism_pair.material.(prism_pair.wavelength; derivative = 2)
     lg_val = lg(prism_pair)
-    #return @. 2 * prism_pair.wavelength^3 / (2pi * c^2) * d2n_dλ2 * lg_val
-    return @. beta_n(prism_pair.material, prism_pair.wavelength; order=2, unit=:μm) * lg_val
+    return @. gvd(prism_pair.material, prism_pair.wavelength; unit = :μm) * lg_val
 end
 
 gdd_negative(prism_pair::PrismPair) = begin
