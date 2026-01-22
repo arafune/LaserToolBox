@@ -1,5 +1,3 @@
-module ModelSymbolic
-
 using Symbolics
 
 """
@@ -49,4 +47,3 @@ function bbo_sellmeier_sym(derivative::Int = 0)
     return derivative == 0 ? n : Differential(λ)^derivative(n)
 end
 
-end
