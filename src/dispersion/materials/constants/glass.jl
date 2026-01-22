@@ -17,6 +17,27 @@ const CaF2_SOURCE = """
   0.15 - 12 μm
 """
 
+const CORNING7980_SOURCE = """
+# Source
+  https://www.corning.com/media/worldwide/csm/documents/HPFS_Product_Brochure_All_Grades_2015_07_21.pdf
+
+# Condition: 22 °C
+
+frequently refer as UVFS
+
+"""
+
+const CORNING7979_SOURCE = """
+# Source
+  https://www.corning.com/media/worldwide/csm/documents/HPFS_Product_Brochure_All_Grades_2015_07_21.pdf
+
+# Condition: 22 °C
+
+frequently refer as FS for IR for IR
+
+"""
+
+
 const FUSED_SILICA_SOURCE = """
 # Source
 
@@ -49,22 +70,6 @@ const SF11_SOURCE = """
      C = (0.0136068604, 0.0615960463, 121.922711)
   """
 
-
-const CORNING7980_SOURCE = """
-# Source
-  https://www.corning.com/media/worldwide/csm/documents/HPFS_Product_Brochure_All_Grades_2015_07_21.pdf
-
-frequently refer as UVFS
-
-"""
-
-const CORNING7979_SOURCE = """
-# Source
-  https://www.corning.com/media/worldwide/csm/documents/HPFS_Product_Brochure_All_Grades_2015_07_21.pdf
-
-frequently refer as FS for IR for IR
-
-"""
 
 # ---------------------------
 """
@@ -149,8 +154,8 @@ $CORNING7979_SOURCE
 """
 const Corning7979 = (
     A = 0.0,
-    B = (3.550277875E-02, 7.306029048E-01, 3.475321572E-01, 9.216052441E-01),
-    C = (-5.783959035E-03, 5.600103210E-03, 1.389808930E-02, 1.006578079E+02),
+    B = (3.550277875E-02, 7.353314507E-01, 3.334560303E-01, 9.269506614E-01),
+    C = (-4.826183477E-03, 5.808687673E-03, 1.399572492E-02, 1.012182926E+02),
     range = (0.185, 2.3),
 )
 
