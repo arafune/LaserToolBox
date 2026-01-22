@@ -1,6 +1,7 @@
 using LinearAlgebra
 
-export AbstractOpticalElement, FreeSpace, ThinLens, ThickLens, Interface, PlanoConvexLens
+export AbstractOpticalElement,
+    Medium, FreeSpace, ThinLens, ThickLens, Interface, PlanoConvexLens
 export transfer_matrix, effective_focal_length, back_focal_length
 
 abstract type AbstractOpticalElement end
