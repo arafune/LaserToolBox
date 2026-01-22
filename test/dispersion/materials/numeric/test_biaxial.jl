@@ -130,7 +130,7 @@ biaxial_material_o_axis_test_data = [
 ]
 
 
-@testset "BiAxial material Refractive Indices along oe-axis (Numeric)" begin
+@testset "BiAxial material Refractive Indices along o-axis (Numeric)" begin
     for data in biaxial_material_o_axis_test_data
         @testset "$(data.label) (Numeric)" begin
             λ = data.λ
