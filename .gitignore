@@ -6,3 +6,4 @@
 *.jl.cov
 *.jl.*.cov
 lcov.info
+coverage_html

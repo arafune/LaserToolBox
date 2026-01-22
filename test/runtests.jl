@@ -1,5 +1,13 @@
 using LaserToolBox
+using Coverage
 using Test
+if Base.JLOptions().code_coverage == 0
+    println("Restarting with --code-coverage for coverage measurement...")
+    run(
+        `$(Base.julia_cmd()) --project=$(Base.active_project()) --code-coverage test/runtests.jl`,
+    )
+    exit()
+end
 
 @testset "LaserToolBox.jl" begin
     @testset "Dispersion" begin
@@ -20,3 +28,8 @@ using Test
         end
     end
 end
+
+
+results = process_folder("src")
+LCOV.writefile("lcov.info", results)
+run(`genhtml -o coverage_html lcov.info`)
