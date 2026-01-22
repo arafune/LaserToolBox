@@ -31,6 +31,6 @@ using Test
 end
 
 
-results = process_folder("src")
+results = process_folder()
 LCOV.writefile("lcov.info", results)
 run(`genhtml -o coverage_html lcov.info`)
