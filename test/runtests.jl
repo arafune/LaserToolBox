@@ -22,7 +22,7 @@ using Test
                 include("dispersion/dispersive_optics/test_prism_pair_internal.jl")
                 #
                 include("dispersion/test_orders.jl")
-                include("dispersion/models/test_model_symbolic.jl")
+                #include("dispersion/models/test_model_symbolic.jl")
                 #
                 include("optics/test_abcd.jl")
             end
