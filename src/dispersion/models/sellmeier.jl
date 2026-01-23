@@ -1,4 +1,5 @@
 module Sellmeier
+using Symbolics
 
 using LaserToolBox.Derivatives: nth_derivative
 
@@ -47,5 +48,21 @@ function sellmeier(
         return nth_derivative(f, λ, derivative)
     end
 end
+
+"""
+sellmeier_sym(derivative=0)
+"""
+function sellmeier_sym(derivative::Int = 0)
+    if derivative < 0
+        throw(ArgumentError("derivative must be ≥ 0"))
+    end
+
+    @variables λ A B[1:3] C[1:3]
+
+    n = sellmeier_expr(λ, A, B, C)
+
+    return derivative == 0 ? n : Differential(λ)^derivative(n)
+end
+
 
 end

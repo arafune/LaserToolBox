@@ -11,6 +11,7 @@ using .Derivatives: nth_derivative
 
 include("dispersion/models/models.jl")
 using .Models
+export Models
 
 include("dispersion/materials/constants/constants.jl")
 using .MaterialConstants

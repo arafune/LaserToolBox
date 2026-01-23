@@ -1,5 +1,6 @@
 # dispersion/models/ciddor.jl
 module AirDispersion
+using Symbolics
 
 using LaserToolBox.Derivatives: nth_derivative
 
@@ -34,7 +35,7 @@ function air_dispersion(
     B::NTuple{2,TCoeff},
     C::NTuple{2,TCoeff};
     derivative::Int = 0,
-) where {T<:Real, TCoeff<:Real}
+) where {T<:Real,TCoeff<:Real}
     if derivative < 0
         throw(ArgumentError("derivative must be ≥ 0"))
     end
@@ -46,5 +47,22 @@ function air_dispersion(
         return nth_derivative(f, λ, derivative)
     end
 end
+
+
+"""
+air_dispersion_sym(derivative=0)
+"""
+function air_dispersion_sym(derivative::Int = 0)
+    if derivative < 0
+        throw(ArgumentError("derivative must be ≥ 0"))
+    end
+
+    @variables λ B[1:2] C[1:2]
+
+    n = air_dispersion_expr(λ, B, C)
+
+    return derivative == 0 ? n : Differential(λ)^derivative(n)
+end
+
 
 end
