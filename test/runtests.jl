@@ -1,4 +1,5 @@
 using LaserToolBox
+using Coverage
 using Test
 
 @testset "LaserToolBox.jl" begin
@@ -14,9 +15,15 @@ using Test
                 include("dispersion/dispersive_optics/test_prism_pair_internal.jl")
                 #
                 include("dispersion/test_orders.jl")
-                #
-                include("optics/test_abcd.jl")
+            end
+            @testset "Symbolic" begin
+                include("dispersion/models/test_models.jl")
             end
         end
     end
+    @testset "Optics" begin
+        include("optics/test_abcd.jl")
+    end
 end
+
+

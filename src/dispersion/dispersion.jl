@@ -5,10 +5,10 @@ include("orders.jl")
 export beta_n, gvd, tod
 
 """Group Velocity Dispersion (GVD) in [fs²/μm]"""
-const gvd(model, λ) = beta_n(model, λ, 2)
+const gvd(model, λ; unit) = beta_n(model, λ; order = 2, unit = :mm)
 
 """Third-Order Dispersion (TOD) in [fs³/μm]"""
-const tod(model, λ) = beta_n(model, λ, 3)
+const tod(model, λ; unit) = beta_n(model, λ; order = 3, unit = :mm)
 
 include("materials/materials.jl")
 using .Materials
