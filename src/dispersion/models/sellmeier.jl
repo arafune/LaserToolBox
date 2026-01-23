@@ -61,8 +61,8 @@ function sellmeier_sym(derivative::Int = 0)
 
     n = sellmeier_expr(λ, A, B, C)
 
-    return derivative == 0 ? n : Differential(λ)^derivative(n)
+    return derivative == 0 ? n : (Differential(λ)^derivative) * n
 end
 
-
+export sellmeier_sym
 end

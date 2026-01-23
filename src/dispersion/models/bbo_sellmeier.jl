@@ -62,8 +62,8 @@ function bbo_sellmeier_sym(derivative::Int = 0)
 
     n = bbo_sellmeier_expr(λ, A, B, C, D)
 
-    return derivative == 0 ? n : Differential(λ)^derivative(n)
+    return derivative == 0 ? n : (Differential(λ)^derivative)*n
 end
 
-
+export bbo_sellmeier_sym
 end

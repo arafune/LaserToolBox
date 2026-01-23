@@ -61,8 +61,9 @@ function air_dispersion_sym(derivative::Int = 0)
 
     n = air_dispersion_expr(λ, B, C)
 
-    return derivative == 0 ? n : Differential(λ)^derivative(n)
+    return derivative == 0 ? n : (Differential(λ)^derivative)*n
 end
 
 
+export air_dispersion_sym
 end
