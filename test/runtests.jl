@@ -33,4 +33,4 @@ end
 
 results = process_folder()
 LCOV.writefile("lcov.info", results)
-run(`genhtml -o coverage_html lcov.info`)
+run(`genhtml  --ignore-errors range  -o coverage_html lcov.info`)
