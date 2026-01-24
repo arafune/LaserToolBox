@@ -104,4 +104,3 @@ function beta_bbo(λ; derivative::Int = 0)
     n_e = beta_bbo_e(λ, derivative = derivative)
     return (n_e = n_e, n_o = n_o)
 end
-

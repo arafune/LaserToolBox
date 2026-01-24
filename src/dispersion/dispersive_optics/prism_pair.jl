@@ -190,4 +190,3 @@ Return the ideal apex angle for the prism at λ.
 function ideal_apex_deg(material::Function, λ)
     return @. rad2deg(2 * asin(sin(deg2rad(brewster_angle_deg(material, λ)))/material(λ)))
 end
-

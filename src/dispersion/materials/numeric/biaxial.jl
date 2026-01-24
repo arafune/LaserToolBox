@@ -152,4 +152,3 @@ function quartz(λ; derivative::Int = 0)
     n_o = quartz_o(λ, ; derivative = derivative)
     return (n_e = n_e, n_o = n_o)
 end
-

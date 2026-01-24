@@ -13,6 +13,3 @@ Return the ideal apex angle for the dispersive prism at λ.
 """
 ideal_apex_deg(n::Real) = rad2deg(2asin(sin(deg2rad(brewster_angle_deg(n)))/n))
 ideal_apex_deg(n) = @. rad2deg(2asin(sin(deg2rad(brewster_angle_deg(n)))/n))
-
-
-

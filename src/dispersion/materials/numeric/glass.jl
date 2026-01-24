@@ -146,4 +146,3 @@ function sf11(λ; derivative::Int = 0)
     end
     return sellmeier(λ, SF11.A, SF11.B, SF11.C; derivative = derivative)
 end
-

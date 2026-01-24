@@ -24,4 +24,3 @@ using LaserToolBox
         @test issorted(n.air.(λs), rev = true)
     end
 end
-

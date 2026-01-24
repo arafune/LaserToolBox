@@ -153,4 +153,3 @@ function back_focal_length(M::AbstractMatrix)
     # BFL = (1 - A) / -C (or A/(-C) depending on convention)
     return M[1, 1] / -M[2, 1]
 end
-

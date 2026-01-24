@@ -6,4 +6,3 @@ include("prism_pair.jl")
 
 export PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
 end
-
