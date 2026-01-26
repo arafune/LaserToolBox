@@ -2,6 +2,8 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Julia](https://img.shields.io/badge/julia-v1.12-blue.svg)](https://julialang.org/)
+[![CI](https://github.com/arafune/LaserToolBox/actions/workflows/CI.yml/badge.svg)](https://github.com/arafune/LaserToolBox/actions/workflows/CI.yml)
+[![codecov](https://codecov.io/gh/arafune/LaserToolBox/branch/main/graph/badge.svg)](https://codecov.io/gh/arafune/LaserToolBox)
 
 LaserToolBox is a comprehensive suite of tools designed for laser spectroscopy system design and optimization. It provides numerical models for dispersion, refractive indices, optical propagation, and polarization analysis.
 
