@@ -37,4 +37,13 @@ include("optics/abcd.jl")
 export Medium, FreeSpace, ThinLens, ThickLens, Interface, PlanoConvexLens
 export transfer_matrix, effective_focal_length, back_focal_length
 
+
+include("polarization/jones.jl")
+
+export JonesVector, JonesMatrix
+export LinearPolarizer, QuarterWavePlate, HalfWavePlate, Rotator, WavePlate
+export horizontal, vertical, diagonal, antidiagonal, right_circular, left_circular
+export intensity, degree_of_polarization, ellipse_parameters
+
+
 end

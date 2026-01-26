@@ -24,6 +24,9 @@ using Test
     @testset "Optics" begin
         include("optics/test_abcd.jl")
     end
+    @testset "Polarization" begin
+        include("polarization/test_jones.jl")
+    end
 end
 
 
