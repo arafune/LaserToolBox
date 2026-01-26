@@ -2,13 +2,19 @@
 module Dispersion
 include("orders.jl")
 
-export beta_n, gvd, tod
+export beta_n
 
 """Group Velocity Dispersion (GVD) in [fs²/μm]"""
-const gvd(model, λ; unit) = beta_n(model, λ; order = 2, unit = :mm)
+function gvd(model, λ; unit = :mm)
+    beta_n(model, λ; order = 2, unit)
+end
 
 """Third-Order Dispersion (TOD) in [fs³/μm]"""
-const tod(model, λ; unit) = beta_n(model, λ; order = 3, unit = :mm)
+function tod(model, λ; unit = :mm)
+    beta_n(model, λ; order = 3, unit)
+end
+
+export gvd, tod
 
 include("materials/materials.jl")
 using .Materials

@@ -28,5 +28,3 @@ using Test
         include("polarization/test_jones.jl")
     end
 end
-
-

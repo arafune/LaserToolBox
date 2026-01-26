@@ -30,7 +30,7 @@ beta_n(n.sf11, 0.8; order=2, unit=:mm)  # GVD in fs^2/mm
 function beta_n(refractive_index_model, λ; order::Int = 1, unit::Symbol = :mm)
     c = 0.299792458  # µm/fs
     scale = unit == :mm ? 1000^(order-1) : 1.0  # Scale factor for length units
-    if order== 1
+    if order == 1
         # Base case: β₁ = dβ/dω = (n - λ * dn/dλ) / c
         # The model function is expected to support: model(λ, derivative=k)
         n_val = refractive_index_model(λ; derivative = 0)
@@ -39,10 +39,9 @@ function beta_n(refractive_index_model, λ; order::Int = 1, unit::Symbol = :mm)
     else
         # Recursive step: βₙ = dβₙ₋₁/dω = (-λ² / 2πc) * dβₙ₋₁/dλ
         # We define βₙ₋₁ as a function of λ and differentiate it.
-        prev_order(l) = beta_n(refractive_index_model, l; order=order-1)
+        prev_order(l) = beta_n(refractive_index_model, l; order = order-1)
 
         prefactor = -λ^2 / (2π * c)
         return prefactor * ForwardDiff.derivative(prev_order, λ) * scale
     end
 end
-

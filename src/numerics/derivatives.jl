@@ -34,5 +34,3 @@ function fast_nth_derivative(f, x, n::Int)
 end
 
 end
-
-

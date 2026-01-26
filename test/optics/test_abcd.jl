@@ -9,5 +9,3 @@ tc =1.6mm, R = 114.75 mm
 """
 edmund_11_720 = PlanoConvexLens(n_lens = n.fused_silica(0.5876), d = 1.6, R = 114.75)
 @test back_focal_length(transfer_matrix(edmund_11_720)) ≈ 249.541 atol=0.1
-
-
