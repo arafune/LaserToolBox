@@ -31,10 +31,11 @@ using .Materials
 using ..Models
 
 include("dispersive_optics/dispersive_optics.jl")
-using .DispersiveOptics: PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
+using .DispersiveOptics:
+    PrismPair, gdd, gdd_positive, gdd_negative, lg, brewster_angle_deg, ideal_apex_deg
 
 export DispersiveOptics
-export PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
+export PrismPair, gdd, gdd_positive, gdd_negative, lg, brewster_angle_deg, ideal_apex_deg
 
 import ..RefractiveIndex
 const n = RefractiveIndex

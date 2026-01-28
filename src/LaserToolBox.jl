@@ -29,7 +29,7 @@ include("dispersion/dispersion.jl")
 using .Dispersion
 
 export Dispersion
-export PrismPair, gdd, brewster_angle_deg, ideal_apex_deg
+export PrismPair, gdd, gdd_negative, gdd_positive, lg, brewster_angle_deg, ideal_apex_deg
 export beta_n, gvd, tod
 
 include("optics/abcd.jl")

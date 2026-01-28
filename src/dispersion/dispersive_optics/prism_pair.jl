@@ -21,7 +21,7 @@ using ...Dispersion: beta_n, gvd
   Apex angle of the prism (radians; input in degrees, converted internally).
 - `separation::AbstractVector{Float64}`
   Separation between the prisms (μm; input in mm, converted internally).
-- `insertion::Tuple{Float64,Float64}`  
+- `insertion::Tuple{AbstractVvector{Float64},AbstractVector{Float64}}`
   Insertion depth of the beam into each prism (μm; input in mm, converted internally).
 - `wavelength::AbstractVector{Float64}`  
 Central wavelength(s) (μm; converted internally. While nm can be accepted, but strongly recommend to use explicit μm) .
@@ -45,8 +45,8 @@ pp = PrismPair(
 
 The unit of each field is as follows:
 - angle: radians
-- length : µm
-- time : fs
+- length: µm
+- time: fs
 
 The unit of args are converted as follows:
 
@@ -66,7 +66,7 @@ struct PrismPair{F}
     material::F  # Function to get refractive index: n(λ)
     apex_angle::Float64 # Apex angle of the prism in radians
     separation::AbstractVector{Float64} # Separation between the prisms
-    insertion::Tuple{Float64,Float64}  # Insertion depth of the beam into the prism
+    insertion::Tuple{AbstractVector{Float64},AbstractVector{Float64}}  # Insertion depth of the beam into the prism
     wavelength::AbstractVector{Float64} # Central wavelength in µm
 end
 
@@ -89,7 +89,13 @@ function PrismPair(;
     separation =
         separation isa AbstractVector ? Vector{Float64}(separation * 1e3) :
         [float(separation*1e3)]  # convert mm to µm
-    insertion = (insertion[1] * 1e3, insertion[2] * 1e3)  # convert mm to µm
+    insert_a =
+        insertion[1] isa AbstractVector ? Vector{Float64}(insertion[1]*1e3) :
+        [float(insertion[1]*1e3)]
+    insert_b =
+        insertion[2] isa AbstractVector ? Vector{Float64}(insertion[2]*1e3) :
+        [float(insertion[2]*1e3)]
+    insertion = (insert_a, insert_b)  # convert mm to µm
     incident_angle = deg2rad(incident_angle)  # convert degrees to radians
     apex_angle = deg2rad(apex_angle)  # convert degrees to radians
 
@@ -131,9 +137,10 @@ theta_2(prism_pair::PrismPair) = begin
 end
 
 """
-lg(prism_pair::PrismPair)
 
-Calculate the geometric path length through the prism pair.
+  `lg`(prism_pair::PrismPair)
+
+Return the geometric path length through the prism pair.
 
 Returns a scalar or vector depending on wavelength.
 """
@@ -182,6 +189,7 @@ gdd_positive(prism_pair::PrismPair) = begin
 end
 
 raw"""
+
   `gdd_negative`(prism_pair::PrismPair) -> Vector{Float64}
 
 Returns a Vector{Float64} even though wavelength was a single value.
@@ -203,6 +211,7 @@ end
 
 
 """
+
   `gdd`(prism_pair::PrismPair) -> Float64 or Vector{Float64}
 
 GDD of Prism pair
