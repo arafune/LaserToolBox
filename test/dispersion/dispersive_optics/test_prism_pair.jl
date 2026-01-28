@@ -34,7 +34,7 @@ pr_brewster = PrismPair(
     @test DO.dn_dΩ(prism)[1] > 0
 
     l1 = prism.insertion[1] * cos(DO.theta_1(prism)[1]) / cos(DO.theta_2(prism)[1])
-    @test DO.lg(prism)[1] ≈ (l1 + prism.insertion[2]) * sin(prism.apex_angle / 2) * 2
+    @test DO.lg(prism)[1] ≈ (l1+prism.insertion[2])[1] * sin(prism.apex_angle / 2) * 2
 end
 
 

@@ -8,36 +8,49 @@ This function is used as the default material property for the PrismPair struct.
 using ..Materials.RefractiveIndex: sf11
 using ...Dispersion: beta_n, gvd
 
-"""A struct representing a pair of prisms used for dispersion compensation.
+"""
+
+  A struct representing a pair of prisms used for dispersion compensation.
+
+# Fields
+- `incident_angle::Float64`  
+  Incident angle of the beam (radians; input in degrees, converted internally).
+- `material::F`  
+  Function to get refractive index: n(λ) (λ in μm). Must accept a `derivative` keyword argument.
+- `apex_angle::Float64`  
+  Apex angle of the prism (radians; input in degrees, converted internally).
+- `separation::AbstractVector{Float64}`
+  Separation between the prisms (μm; input in mm, converted internally).
+- `insertion::Tuple{AbstractVvector{Float64},AbstractVector{Float64}}`
+  Insertion depth of the beam into each prism (μm; input in mm, converted internally).
+- `wavelength::AbstractVector{Float64}`  
+Central wavelength(s) (μm; converted internally. While nm can be accepted, but strongly recommend to use explicit μm) .
+
+# Usage
+Create a `PrismPair` using keyword arguments. All units are automatically converted as described above.
+
+# Example
+```julia
+pp = PrismPair(
+    incident_angle = 60.0,      # degrees
+    material = n.sf11,            # function n(λ)
+    apex_angle = 59.0,          # degrees
+    separation = 100.0,         # mm
+    insertion = (3.0, 5.0),    # mm
+    wavelength = .800          # nm or μm
+)
+```
+
+# Note
 
 The unit of each field is as follows:
 - angle: radians
-- length : µm
-- time : fs
+- length: µm
+- time: fs
 
-"""
-struct PrismPair{F}
-    incident_angle::Float64 # Incident angle of the beam in radians
-    material::F  # Function to get refractive index: n(λ)
-    apex_angle::Float64 # Apex angle of the prism in radians
-    separation::Float64 # Separation between the prisms
-    insertion::Tuple{Float64,Float64}  # Insertion depth of the beam into the prism
-    wavelength::AbstractVector{Float64} # Central wavelength in µm
-    function PrismPair(ia, mat::F, aa, sep, ins, wl) where {F}
-        # Normalize wavelength to always be a Vector{Float64}
-        normalized_wl = wl isa AbstractVector ? Vector{Float64}(wl) : [float(wl)]
-        new{F}(ia, mat, aa, sep, ins, normalized_wl)
-    end
-end
+The unit of args are converted as follows:
 
-nm_to_μm(λ::Real) = λ > 100 ? λ * 1e-3 : λ
-nm_to_μm(λ::Union{AbstractVector,Tuple}) = nm_to_μm.(λ)
-
-"""PrismPair instance.
-
-The unit of args are as follows:
-
-* wavelength: nm or µm  → converted to µm, internally.
+* wavelength: µm  → converted to µm, internally 
 * separation: mm  →  converted to µm, internally.
 * insertion: mm → converted to µm, internally.
 * apex_angle : degrees converted to radians, internally.
@@ -46,7 +59,21 @@ The unit of args are as follows:
 
   The argument material must be a function that takes the wavelength λ as its first
   argument and supports a derivative keyword argument, e.g., material(λ; derivative=1).
+
 """
+struct PrismPair{F}
+    incident_angle::Float64 # Incident angle of the beam in radians
+    material::F  # Function to get refractive index: n(λ)
+    apex_angle::Float64 # Apex angle of the prism in radians
+    separation::AbstractVector{Float64} # Separation between the prisms
+    insertion::Tuple{AbstractVector{Float64},AbstractVector{Float64}}  # Insertion depth of the beam into the prism
+    wavelength::AbstractVector{Float64} # Central wavelength in µm
+end
+
+nm_to_μm(λ::Real) = λ > 100 ? λ * 1e-3 : λ
+nm_to_μm(λ::Union{AbstractVector,Tuple}) = nm_to_μm.(λ)
+
+# document is given in the struc
 function PrismPair(;
     incident_angle = 60.0,
     material = sf11,
@@ -55,9 +82,20 @@ function PrismPair(;
     insertion = (3, 5),
     wavelength = 800.0,
 )
+
+    wavelength =
+        wavelength isa AbstractVector ? Vector{Float64}(wavelength) : [float(wavelength)]
     wavelength = nm_to_μm(wavelength)
-    separation = separation * 1e3  # convert mm to µm
-    insertion = (insertion[1] * 1e3, insertion[2] * 1e3)  # convert mm to µm
+    separation =
+        separation isa AbstractVector ? Vector{Float64}(separation * 1e3) :
+        [float(separation*1e3)]  # convert mm to µm
+    insert_a =
+        insertion[1] isa AbstractVector ? Vector{Float64}(insertion[1]*1e3) :
+        [float(insertion[1]*1e3)]
+    insert_b =
+        insertion[2] isa AbstractVector ? Vector{Float64}(insertion[2]*1e3) :
+        [float(insertion[2]*1e3)]
+    insertion = (insert_a, insert_b)  # convert mm to µm
     incident_angle = deg2rad(incident_angle)  # convert degrees to radians
     apex_angle = deg2rad(apex_angle)  # convert degrees to radians
 
@@ -99,9 +137,10 @@ theta_2(prism_pair::PrismPair) = begin
 end
 
 """
-lg(prism_pair::PrismPair)
 
-Calculate the geometric path length through the prism pair.
+  `lg`(prism_pair::PrismPair)
+
+Return the geometric path length through the prism pair.
 
 Returns a scalar or vector depending on wavelength.
 """
@@ -150,6 +189,7 @@ gdd_positive(prism_pair::PrismPair) = begin
 end
 
 raw"""
+
   `gdd_negative`(prism_pair::PrismPair) -> Vector{Float64}
 
 Returns a Vector{Float64} even though wavelength was a single value.
@@ -171,6 +211,7 @@ end
 
 
 """
+
   `gdd`(prism_pair::PrismPair) -> Float64 or Vector{Float64}
 
 GDD of Prism pair
