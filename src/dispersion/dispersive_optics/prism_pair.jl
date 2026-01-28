@@ -44,7 +44,8 @@ The unit of args are as follows:
 * incident_angle : degrees converted to radians, internally.
 * material : function that takes wavelength (in µm) and returns refractive index.:
 
-  The argument material must be a function that takes the wavelength λ as its first argument and supports a derivative keyword argument, e.g., material(λ; derivative=1).
+  The argument material must be a function that takes the wavelength λ as its first
+  argument and supports a derivative keyword argument, e.g., material(λ; derivative=1).
 """
 function PrismPair(;
     incident_angle = 60.0,
@@ -136,11 +137,26 @@ dθ3_dΩ(prism_pair::PrismPair) = begin
               (-n * cos(θ2) * dθ1_dΩ_val + sin(θ2) * dn_dΩ_val)
 end
 
+raw"""
+  `gdd_positive`(prism_pair::PrismPair) -> Vector{Float64}
+
+Returns a Vector{Float64} even though wavelength was a single value.
+
+This positive contribution to GDD arises from the material dispersion of the prism material over distance Lg.
+"""
 gdd_positive(prism_pair::PrismPair) = begin
     lg_val = lg(prism_pair)
     return @. gvd(prism_pair.material, prism_pair.wavelength; unit = :μm) * lg_val
 end
 
+raw"""
+  `gdd_negative`(prism_pair::PrismPair) -> Vector{Float64}
+
+Returns a Vector{Float64} even though wavelength was a single value.
+
+This negative contribution to GDD arises from the angular dispersion $\frac{d\theta_3}{d\Omega},
+and angular dispersion of $\frac{d\theta_3}{d\Omega}$ over distance $L_g$ in the glass of refractive index n.
+"""
 gdd_negative(prism_pair::PrismPair) = begin
     dn_dλ = prism_pair.material.(prism_pair.wavelength; derivative = 1)
     n = prism_pair.material.(prism_pair.wavelength)
@@ -150,16 +166,22 @@ gdd_negative(prism_pair::PrismPair) = begin
     gap_component =
         @. -2pi / prism_pair.wavelength * prism_pair.separation * dθ3_dΩ_val^2
     prism_component = @. -n * 2pi / prism_pair.wavelength * lg_val * (dθ1_dΩ_val)^2
-    return @. (gap_component + prism_component) * 2
+    return @. (gap_component + prism_component)
 end
 
 
 """
-  gdd(prism_pair::PrismPair) -> Float64 or Vector{Float64}
+  `gdd`(prism_pair::PrismPair) -> Float64 or Vector{Float64}
 
 GDD of Prism pair
 
 Returns a scalar Float64 if wavelength was a single value, otherwise returns a Vector{Float64}.
+
+# Note
+
+The total GDD is the sum of the positive GDD from material dispersion and the negative GDD from geometric dispersion.
+This function returns the GDD for a single prism pair by summing both contributions.
+In the actual setup, the beam passes through two prism pairs, so the total GDD is **twice** the value returned by this function.
 
 # Reference
 
@@ -174,18 +196,35 @@ gdd(prism_pair::PrismPair) = begin
 end
 
 """
-  brewster_angle_deg(material::Function, λ)
+  `brewster_angle_deg`(material::Function, λ)
 
 Return the Brewster angle for a given material at λ.
+
+# Arguments
+- `material::Function, λ`: A function describing the refractive index as a function of wavelength `λ`. Returns the Brewster angle for each `λ`.
+- `n::Real`: A real refractive index. Returns the Brewster angle for this value.
+- `n::AbstractArray`: An array of refractive indices. Returns an array of Brewster angles for each value.
+
+# Example
+```julia
+brewster_angle_deg(n)             # n is a real number
+brewster_angle_deg([1.5, 2.0])    # n is an array
+brewster_angle_deg(material, λ)   # material is a function of λ
+```
 """
 function brewster_angle_deg(material::Function, λ)
     return @. rad2deg(atan(material(λ)))
 end
 
 """
-  ideal_apex_deg(material::Function, λ::Float64) -> Float64
+  `ideal_apex_deg`(material::Function, λ::Float64) -> Float64
 
 Return the ideal apex angle for the prism at λ.
+
+# Arguments
+- `material::Function, λ`: A function describing the refractive index as a function of wavelength `λ`. Returns the Brewster angle for each `λ`.
+- `n::Real`: A real refractive index. Returns the Brewster angle for this value.
+- `n::AbstractArray`: An array of refractive indices. Returns an array of Brewster angles for each value.
 """
 function ideal_apex_deg(material::Function, λ)
     return @. rad2deg(2 * asin(sin(deg2rad(brewster_angle_deg(material, λ)))/material(λ)))
